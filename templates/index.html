@@ -1,0 +1,39 @@
+{% extends 'base.html'%}
+
+
+<!-- head -->
+{% block head %}
+<title>TODO App</title>
+{% endblock %}
+
+
+<!-- body 20:54-->
+{% block body %}
+<div class="index">
+    <h1 style="text-align: center;">TODO App</h1>
+    <h4 style="text-align: center;">Welcome to the TODO app, please signup or login.</h4>
+
+    <style>
+        .index {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin: -100px 0 0 -150px;
+        }
+
+        .buttons {
+            margin: 0;
+            position: absolute;
+            left: 50%;
+        }
+    </style>
+
+    <div class="buttons">
+        <button type="button" onclick="window.location.href='{{ url_for('login') }}';">Login</button>
+        <br>
+        <br>
+        <button type="button" onclick="window.location.href='{{ url_for('signup') }}';">Signup</button>
+    </div>
+
+</div>
+{% endblock %}

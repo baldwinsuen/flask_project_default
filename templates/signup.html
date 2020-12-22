@@ -1,0 +1,36 @@
+{% extends 'base.html'%}
+
+
+<!-- head -->
+{% block head %}
+
+{% endblock %}
+
+
+<!-- body 20:54-->
+{% block body %}
+<div class="signup">
+    <h1>Sign Up</h1>
+
+    <div>
+        <form action="/" method="POST">
+            <label for="firstname">Firstname</label>
+            <input type="text" name="firstname" id="firstname" />
+            <br>
+            <label for="lastname">Lastname</label>
+            <input type="text" name="lastname" id="lastname" />
+            <br>
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" />
+            <br>
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" />
+            <br>
+            <input type="submit" value="Create Account" />
+        </form>
+    </div>
+
+
+
+</div>
+{% endblock %}
