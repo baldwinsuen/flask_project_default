@@ -1,45 +1,31 @@
+# pylint: disable=no-member
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-import jwt
+from flask_login import UserMixin, LoginManager
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///book.sqlite"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
+login_manager = LoginManager()
+login_manager.login_view = "login"
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     """ User Model """
 
     __tablename__ = "UserModel"
     id = db.Column(db.Integer, primary_key=True)
-    firstname = db.Column(db.String(32), nullable=False)
-    lastname = db.Column(db.String(32), nullable=False)
+    email = db.Column(db.String(32), nullable=False)
     username = db.Column(db.String(32), nullable=False)
     password = db.Column(db.String(32), nullable=False)
 
-    def __init__(self, firstname, lastname, username, password):
-        self.firstname = firstname
-        self.lastname = lastname
+    def __init__(self, email, username, password):
+        self.email = email
         self.username = username
         self.password = password  # look into Flask.Bcrypt if you get the chance
-
-    def encode_auth_token(self, user_id):
-        """ Generates authentication token """
-
-        try:
-            payload = {
-                # exp -> expiration date | iat -> token creation date | sub -> subject of token
-                "exp": datetime.datetime.utcnow()
-                + datetime.timedelta(days=0, seconds=5),
-                "iat": datetime.datetime.utcnow(),
-                "sub": user_id,
-            }
-            return jwt.encode(payload, app.config.get("SECRET_KEY"), algorithm="HS256")
-
-        except Exception as e:
-            return e
 
 
 class ToDO(db.Model):

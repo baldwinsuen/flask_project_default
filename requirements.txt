@@ -1,3 +1,14 @@
 Flask==1.0
 Flask-SQLAlchemy==2.2
-pyjwt
+
+# forms
+flask-boostrap
+wtforms
+flask-wtf
+email-validator
+
+# password hashing
+werkzeug
+
+# sessions
+flask-login
