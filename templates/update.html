@@ -1,0 +1,58 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+
+{% block title %}
+TODO App
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='css/main.css')}}">
+{% endblock %}
+
+
+<!-- body 20:54-->
+{% block content %}
+
+<style>
+    .logout {
+        float: left;
+        margin-left: 20px;
+    }
+</style>
+
+<div class="logout">
+
+    <form method="GET" action="/logout">
+        <button class="btn btn-primary" type="submit">Logout</button>
+    </form>
+
+</div>
+
+<div class="todo">
+    <h1>Update Task</h1>
+
+
+    <div class="form">
+        <form action="/todo/update/{{task.id}}" method="POST">
+            <label for="content">Task Description</label>
+            <textarea type="text" name="content" id="content" rows="4" cols="50"
+                placeholder="{{task.content}}"></textarea>
+            <label for="due_date">Due Date (Optional)</label>
+            <br>
+            <input type="date" name="due_date" id="due_date" placeholder="task.due_date">
+            <br>
+            <br>
+            <input type="submit" value="Update Task">
+        </form>
+    </div>
+
+
+
+</div>
+
+
+
+
+{% endblock %}

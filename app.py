@@ -5,8 +5,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bootstrap import Bootstrap
 from flask_login import login_user, login_required, logout_user, current_user
 
+from datetime import datetime, date
+
 from forms import LoginForm, RegisterForm
-from models import db, User, ToDO, login_manager
+from models import db, User, Todo, login_manager
 
 # Flask
 app = Flask(__name__)
@@ -38,11 +40,71 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/todo")
+# @TODO
+# load objects on app start
+# will only show todo objects when another post request is made
+@app.route("/todo", methods=["POST", "GET"])
 @login_required
 def todo():
     """ TODO page """
-    return render_template("todo.html")
+
+    task_owner = current_user.username
+
+    if request.method == "POST":
+
+        task_content = request.form["content"]
+
+        html_date = request.form["due_date"]
+        task_date = None
+        if html_date:
+            task_date = datetime.strptime(html_date, "%Y-%m-%d")
+
+        new_task = Todo(content=task_content, due_date=task_date, owner=task_owner)
+        db.session.add(new_task)
+        db.session.commit()
+
+        return redirect("/todo")
+
+    if request.method == "GET":
+        tasks = Todo.query.filter(Todo.owner == task_owner).all()
+        return render_template("todo.html", tasks=tasks)
+
+
+@app.route("/todo/delete/<int:id>")
+@login_required
+def delete(id):
+    delete_task = Todo.query.get_or_404(id)
+
+    try:
+        db.session.delete(delete_task)
+        db.session.commit()
+        return redirect("/todo")
+
+    except:
+        return "There was a problem deleting this task."
+
+
+@app.route("/todo/update/<int:id>", methods=["POST", "GET"])
+@login_required
+def update(id):
+    task = Todo.query.get_or_404(id)
+    if request.method == "POST":
+        task.content = request.form["content"]
+        html_date = request.form["due_date"]
+        task_date = None
+        if html_date:
+            task_date = datetime.strptime(html_date, "%Y-%m-%d")
+            task.due_date = task_date
+
+        try:
+            db.session.commit()
+            return redirect("/todo")
+        except:
+            return "Your task could not be updated."
+
+    else:
+
+        return render_template("update.html", task=task)
 
 
 @app.route("/login", methods=["POST", "GET"])
@@ -61,8 +123,8 @@ def login():
                 # create session
                 login_user(user, remember=form.remember.data)
                 return render_template("todo.html")
-
-    return render_template("login.html", form=form)
+    else:
+        return render_template("login.html", form=form)
 
 
 @app.route("/signup", methods=["POST", "GET"])
@@ -91,8 +153,8 @@ def signup():
         db.session.commit()
 
         return render_template("index.html")
-
-    return render_template("signup.html", form=form)
+    else:
+        return render_template("signup.html", form=form)
 
 
 @app.route("/logout")

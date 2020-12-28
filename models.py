@@ -13,6 +13,24 @@ login_manager = LoginManager()
 login_manager.login_view = "login"
 
 
+class Todo(db.Model):
+    """ TODO Model """
+
+    __tablename__ = "TODOModel"
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.String(256), nullable=False)
+    due_date = db.Column(db.Date, nullable=True)
+    date_created = db.Column(db.Date, default=datetime.now().date())
+    owner = db.Column(db.String(32), nullable=False)
+    completed = db.Column(db.Boolean, default=False)
+
+    def __init__(self, content, due_date, owner):
+        self.content = content
+        self.due_date = due_date
+        self.date_created = datetime.now().date()
+        self.owner = owner
+
+
 class User(UserMixin, db.Model):
     """ User Model """
 
@@ -25,23 +43,4 @@ class User(UserMixin, db.Model):
     def __init__(self, email, username, password):
         self.email = email
         self.username = username
-        self.password = password  # look into Flask.Bcrypt if you get the chance
-
-
-class ToDO(db.Model):
-    """ TODO Model """
-
-    __tablename__ = "TODOModel"
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(128), nullable=False)
-    description = db.Column(db.String(256), nullable=False)
-    due_date = db.Column(db.DateTime)
-    date_created = db.Column(db.DateTime, default=datetime.utcnow)
-
-    def __init__(self, name, description, due_date):
-        self.name = name
-        self.description = description
-        self.due_date = datetime.utcnow()
-
-    def __repr__(self):
-        return "<Task %r>" % self.id
+        self.password = password

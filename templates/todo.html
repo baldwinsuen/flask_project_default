@@ -1,34 +1,84 @@
-{% extends 'base.html'%}
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
 
-<!-- head -->
-{% block head %}
+{% block title %}
+TODO App
+{% endblock %}
 
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='css/main.css')}}">
 {% endblock %}
 
 
 <!-- body 20:54-->
-{% block body %}
+{% block content %}
+
+<style>
+    .logout {
+        float: left;
+        margin-left: 20px;
+    }
+</style>
+
+<div class="logout">
+
+    <form method="GET" action="/logout">
+        <button class="btn btn-primary" type="submit">Logout</button>
+    </form>
+
+</div>
+
 <div class="todo">
     <h1>TODO App</h1>
 
-    <table>
-        <tr>
-            <th>Task</th>
-            <th>Added</th>
-            <th>Actions</th>
-        </tr>
+    {% if tasks|length < 1 %} <h4>No tasks currently created. Create one now!</h4>
 
-        <tr>
-            <td></td>
-            <td></td>
-            <td>
-                <a href="">Delete</a>
+        {% else %}
+
+        <table>
+            <tr>
+                <th>Completed</th>
+                <th>Task</th>
+                <th>Created</th>
+                <th>Due Date</th>
+                <th>Actions</th>
+            </tr>
+            {% for task in tasks %}
+            <tr>
+                <td><input type="checkbox" name="completed">&nbsp</td>
+                <td>{{ task.content }}</td>
+                <td>{{ task.date_created }}</td>
+                <td>{{ task.due_date }}</td>
+                <td>
+                    <a href="/todo/delete/{{task.id}}">Delete</a>
+                    <br>
+                    <a href="/todo/update/{{task.id}}">Update</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+
+        <div class="form">
+            <form action="/todo" method="POST">
+                <label for="content">Task Description</label>
+                <textarea type="text" name="content" id="content" rows="4" cols="50"></textarea>
+                <label for="due_date">Due Date (Optional)</label>
                 <br>
-                <a href="">Update</a>
-            </td>
-        </tr>
-    </table>
+                <input type="date" name="due_date" id="due_date" placeholder="due date">
+                <br>
+                <br>
+                <input type="submit" value="Add Task">
+            </form>
+        </div>
+
+
 
 </div>
+
+
+
+
 {% endblock %}
