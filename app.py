@@ -120,7 +120,7 @@ def completed(id):
 
     if request.method == "POST":
         completion = not task.completed
-
+        task.completed = completion
         try:
             db.session.commit()
             return redirect("/todo")

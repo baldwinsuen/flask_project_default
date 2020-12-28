@@ -1,9 +1,10 @@
-/* body, html {
-    margin: 0;
-    font-family: sans-serif;
+body {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: #eee;
 }
 
-.todo {
+/* .todo {
     margin: 0 auto;
     width: 400px;
 }
@@ -34,6 +35,6 @@ td {
 
 #todo {
     width: 70%;
-}
+} */
 
- */
+
