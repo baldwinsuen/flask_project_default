@@ -22,13 +22,14 @@ class Todo(db.Model):
     due_date = db.Column(db.Date, nullable=True)
     date_created = db.Column(db.Date, default=datetime.now().date())
     owner = db.Column(db.String(32), nullable=False)
-    completed = db.Column(db.Boolean, default=False)
+    completed = db.Column(db.Boolean)
 
-    def __init__(self, content, due_date, owner):
+    def __init__(self, content, due_date, owner, completed):
         self.content = content
         self.due_date = due_date
         self.date_created = datetime.now().date()
         self.owner = owner
+        self.completed = completed
 
 
 class User(UserMixin, db.Model):

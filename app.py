@@ -53,13 +53,19 @@ def todo():
     if request.method == "POST":
 
         task_content = request.form["content"]
+        completion = False
 
         html_date = request.form["due_date"]
         task_date = None
         if html_date:
             task_date = datetime.strptime(html_date, "%Y-%m-%d")
 
-        new_task = Todo(content=task_content, due_date=task_date, owner=task_owner)
+        new_task = Todo(
+            content=task_content,
+            due_date=task_date,
+            owner=task_owner,
+            completed=completion,
+        )
         db.session.add(new_task)
         db.session.commit()
 
@@ -107,6 +113,24 @@ def update(id):
         return render_template("update.html", task=task)
 
 
+@app.route("/todo/completed/<int:id>", methods=["POST", "GET"])
+@login_required
+def completed(id):
+    task = Todo.query.get_or_404(id)
+
+    if request.method == "POST":
+        completion = not task.completed
+
+        try:
+            db.session.commit()
+            return redirect("/todo")
+
+        except:
+            return "Task completion status could not be changed."
+
+    return render_template("todo.html", task=task)
+
+
 @app.route("/login", methods=["POST", "GET"])
 def login():
     """ Login page and function """
@@ -122,7 +146,7 @@ def login():
 
                 # create session
                 login_user(user, remember=form.remember.data)
-                return render_template("todo.html")
+                return redirect("/todo")
     else:
         return render_template("login.html", form=form)
 
@@ -149,10 +173,13 @@ def signup():
         new_user = User(
             username=form.username.data, email=form.email.data, password=hashed_password
         )
-        db.session.add(new_user)
-        db.session.commit()
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            return render_template("index.html")
+        except:
+            return "New user could not be added."
 
-        return render_template("index.html")
     else:
         return render_template("signup.html", form=form)
 
@@ -161,7 +188,7 @@ def signup():
 @login_required
 def logout():
     logout_user()
-    return render_template("index.html")
+    return redirect("/")
 
 
 if __name__ == "__main__":
