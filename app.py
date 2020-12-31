@@ -183,9 +183,13 @@ def addtask():
             owner=task_owner,
             completed=False,
         )
-        db.session.add(new_task)
-        db.session.commit()
-        return redirect("/todo")
+        try:
+            db.session.add(new_task)
+            db.session.commit()
+            return redirect("/todo")
+
+        except:
+            return "The task could not be added."
 
     return render_template("add.html", form=form)
 
