@@ -3,7 +3,7 @@
 
 
 {% block title %}
-Update Task
+Add Task
 {% endblock %}
 
 {% block styles %}
@@ -25,17 +25,28 @@ Update Task
 
 <div class="container">
 
-    <form class="form-signin" method="POST" action="/todo/update/{{task.id}}">
-        <h2 class="form-signin-heading">Update Task</h2>
+    <form class="form-signin" method="POST" action="/addtask">
+        <h2 class="form-signin-heading">Add Task</h2>
         <dl>
             {{ form.hidden_tag() }}
             {{ wtf.form_field(form.description) }}
             {{ wtf.form_field(form.due_date) }}
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Update Task</button>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Add Task</button>
         </dl>
     </form>
 
 </div>
+
+
+
+
+
+
+
+
+
+
+
 
 
 {% endblock %}

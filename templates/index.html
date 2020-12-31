@@ -1,39 +1,42 @@
-{% extends 'base.html'%}
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
 
-<!-- head -->
-{% block head %}
-<title>TODO App</title>
+{% block title %}
+Add Task
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" type="text/css" href="{{url_for('.static', filename='css/signin.css')}}">
 {% endblock %}
 
 
 <!-- body 20:54-->
-{% block body %}
-<div class="index">
-    <h1 style="text-align: center;">TODO App</h1>
-    <h4 style="text-align: center;">Welcome to the TODO app, please signup or login.</h4>
+{% block content %}
 
-    <style>
-        .index {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            margin: -100px 0 0 -150px;
-        }
+<div class="container">
 
-        .buttons {
-            margin: 0;
-            position: absolute;
-            left: 50%;
-        }
-    </style>
-
-    <div class="buttons">
-        <button type="button" onclick="window.location.href='{{ url_for('login') }}';">Login</button>
+    <center>
+        <h2 class="form-signin-heading">Welcome to the TODO app</h2>
+        <br>
+        <button onclick="window.location.href='{{ url_for('login') }}';" class="btn btn-lg btn-primary"
+            type="submit">Login</button>
         <br>
         <br>
-        <button type="button" onclick="window.location.href='{{ url_for('signup') }}';">Signup</button>
-    </div>
+        <button onclick="window.location.href='{{ url_for('signup') }}';" class="btn btn-lg btn-primary"
+            type="submit">Signup</button>
+    </center>
+
+
 
 </div>
+
 {% endblock %}
+
+<!-- <div class="buttons">
+    <button type="button" onclick="window.location.href='{{ url_for('login') }}';">Login</button>
+    <br>
+    <br>
+    <button type="button" onclick="window.location.href='{{ url_for('signup') }}';">Signup</button>
+</div> -->

@@ -7,7 +7,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 
 from datetime import datetime, date
 
-from forms import LoginForm, RegisterForm
+from forms import LoginForm, RegisterForm, AddTaskForm, UpdateTaskForm
 from models import db, User, Todo, login_manager
 
 # Flask
@@ -40,40 +40,14 @@ def index():
     return render_template("index.html")
 
 
-# @TODO
-# load objects on app start
-# will only show todo objects when another post request is made
-@app.route("/todo", methods=["POST", "GET"])
+@app.route("/todo")
 @login_required
 def todo():
     """ TODO page """
 
     task_owner = current_user.username
-
-    if request.method == "POST":
-
-        task_content = request.form["content"]
-        completion = False
-
-        html_date = request.form["due_date"]
-        task_date = None
-        if html_date:
-            task_date = datetime.strptime(html_date, "%Y-%m-%d")
-
-        new_task = Todo(
-            content=task_content,
-            due_date=task_date,
-            owner=task_owner,
-            completed=completion,
-        )
-        db.session.add(new_task)
-        db.session.commit()
-
-        return redirect("/todo")
-
-    if request.method == "GET":
-        tasks = Todo.query.filter(Todo.owner == task_owner).all()
-        return render_template("todo.html", tasks=tasks)
+    tasks = Todo.query.filter(Todo.owner == task_owner).all()
+    return render_template("todo.html", tasks=tasks)
 
 
 @app.route("/todo/delete/<int:id>")
@@ -94,13 +68,16 @@ def delete(id):
 @login_required
 def update(id):
     task = Todo.query.get_or_404(id)
-    if request.method == "POST":
-        task.content = request.form["content"]
-        html_date = request.form["due_date"]
+    form = UpdateTaskForm()
+    if form.validate_on_submit():
+        task.content = form.description.data
+        d_date = form.due_date.data
+
+        # @TODO
+        # add checkbox that will allow you to remove due date
         task_date = None
-        if html_date:
-            task_date = datetime.strptime(html_date, "%Y-%m-%d")
-            task.due_date = task_date
+        if d_date:
+            task.due_date = d_date
 
         try:
             db.session.commit()
@@ -110,7 +87,7 @@ def update(id):
 
     else:
 
-        return render_template("update.html", task=task)
+        return render_template("update.html", task=task, form=form)
 
 
 @app.route("/todo/completed/<int:id>", methods=["POST", "GET"])
@@ -189,6 +166,28 @@ def signup():
 def logout():
     logout_user()
     return redirect("/")
+
+
+@app.route("/addtask", methods=["POST", "GET"])
+@login_required
+def addtask():
+    form = AddTaskForm()
+    task_owner = current_user.username
+
+    if form.validate_on_submit():
+        task_description = form.description.data
+        task_due_date = form.due_date.data
+        new_task = Todo(
+            content=task_description,
+            due_date=task_due_date,
+            owner=task_owner,
+            completed=False,
+        )
+        db.session.add(new_task)
+        db.session.commit()
+        return redirect("/todo")
+
+    return render_template("add.html", form=form)
 
 
 if __name__ == "__main__":

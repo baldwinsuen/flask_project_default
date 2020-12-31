@@ -3,26 +3,19 @@
 
 
 {% block title %}
-TODO App
+Dashboard
 {% endblock %}
 
 {% block styles %}
 {{super()}}
-<link rel="stylesheet" type="text/css" href="{{url_for('.static', filename='css/main.css')}}">
-
-<style>
-    .logout {
-        float: left;
-        margin-left: 20px;
-    }
-</style>
+<link rel="stylesheet" type="text/css" href="{{url_for('.static', filename='css/todo.css')}}">
 {% endblock %}
 
 
 <!-- body 20:54-->
 {% block content %}
 
-<div class="logout">
+<div class="topleftbut">
 
     <form method="GET" action="/logout">
         <button class="btn btn-lg btn-primary btn-block" type="submit">Logout</button>
@@ -30,73 +23,72 @@ TODO App
 
 </div>
 
+<div class="addbut" style="float: right; margin-right: 20px">
+
+    <form method="GET" action="/addtask">
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Add Task</button>
+    </form>
+
+</div>
+
+
+
 <div class="container">
 
+    <center>
+        <div class="todo">
+            <h1>TODO App</h1>
 
-    <div class="todo">
-        <h1>TODO App</h1>
+            {% if tasks|length < 1 %} <h4>No tasks currently created. Create one now!</h4>
 
-        {% if tasks|length < 1 %} <h4>No tasks currently created. Create one now!</h4>
+                {% else %}
 
-            {% else %}
-
-            <table>
-                <tr>
-                    <th>Completed</th>
-                    <th>Task</th>
-                    <th>Created</th>
-                    <th>Due Date</th>
-                    <th>Actions</th>
-                </tr>
-                {% for task in tasks %}
-                <tr>
-                    {% if task.completed %}
-                    <form>
-                        <td><input type="checkbox" name="completed" value={{task.completed}} checked>&nbsp</td>
-                    </form>
-                    {% else %}
-                    <form>
-                        <td><input type="checkbox" name="completed" value={{task.completed}}>&nbsp</td>
-                    </form>
-                    {% endif %}
-                    <td>{{ task.content }}</td>
-                    <td>{{ task.date_created }}</td>
-                    <td>{{ task.due_date }}</td>
-                    <td>
-                        <form method="GET" action="/todo/delete/{{task.id}}">
-                            <input type="submit" value="Delete">
+                <table>
+                    <tr>
+                        <th>Completed</th>
+                        <th>Task</th>
+                        <th>Created</th>
+                        <th>Due Date</th>
+                        <th>Actions</th>
+                    </tr>
+                    {% for task in tasks %}
+                    <tr>
+                        {% if task.completed %}
+                        <form>
+                            <td><input type="checkbox" name="completed" value={{task.completed}} checked>&nbsp</td>
                         </form>
-                        <br>
-                        <form method="GET" action="/todo/update/{{task.id}}">
-                            <input type="submit" value="Update">
+                        {% else %}
+                        <form>
+                            <td><input type="checkbox" name="completed" value={{task.completed}}>&nbsp</td>
                         </form>
-                        <br>
-                        <form method="POST" action="/todo/completed/{{task.id}}">
-                            <input type="submit" value="Complete">
-                        </form>
+                        {% endif %}
+                        <td>{{ task.content }}</td>
+                        <td>{{ task.date_created }}</td>
+                        <td>{{ task.due_date }}</td>
+                        <td>
+                            <form method="GET" action="/todo/delete/{{task.id}}">
+                                <input type="submit" value="Delete">
+                            </form>
+                            <br>
+                            <form method="GET" action="/todo/update/{{task.id}}">
+                                <input type="submit" value="Update">
+                            </form>
+                            <br>
+                            <form method="POST" action="/todo/completed/{{task.id}}">
+                                <input type="submit" value="Complete">
+                            </form>
 
-                    </td>
-                </tr>
-                {% endfor %}
-            </table>
-            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                {% endif %}
 
-            <div class="form">
-                <h2>Add a Task</h2>
-                <form action="/todo" method="POST">
-                    <label for="content">Task Description</label>
-                    <textarea type="text" name="content" id="content" rows="4" cols="50"></textarea>
-                    <label for="due_date">Due Date (Optional)</label>
-                    <br>
-                    <input type="date" name="due_date" id="due_date" placeholder="due date">
-                    <br>
-                    <br>
-                    <input type="submit" value="Add Task">
-                </form>
-            </div>
-            <br>
-            <br>
-    </div>
+        </div>
+    </center>
+
+
+
 </div>
 
 

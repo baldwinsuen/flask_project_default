@@ -4,6 +4,11 @@ body {
     background-color: #eee;
 }
 
+.logoutb {
+    float: left;
+    margin-left: 20px;
+}
+
 /* .todo {
     margin: 0 auto;
     width: 400px;
