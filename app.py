@@ -70,7 +70,8 @@ def update(id):
     task = Todo.query.get_or_404(id)
     form = UpdateTaskForm()
     if form.validate_on_submit():
-        task.content = form.description.data
+        if form.description.data:
+            task.content = form.description.data
         d_date = form.due_date.data
 
         # @TODO

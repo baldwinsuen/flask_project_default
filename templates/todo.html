@@ -9,13 +9,34 @@ Dashboard
 {% block styles %}
 {{super()}}
 <link rel="stylesheet" type="text/css" href="{{url_for('.static', filename='css/todo.css')}}">
+<style>
+    table,
+    td,
+    th {
+        border: 1px solid #aaa;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th {
+        height: 30px;
+    }
+
+    td {
+        text-align: center;
+        padding: 5px;
+    }
+</style>
 {% endblock %}
 
 
 <!-- body 20:54-->
 {% block content %}
 
-<div class="topleftbut">
+<div class="topleftbut" style="float: left; margin-left: 20px">
 
     <form method="GET" action="/logout">
         <button class="btn btn-lg btn-primary btn-block" type="submit">Logout</button>
@@ -36,7 +57,7 @@ Dashboard
 <div class="container">
 
     <center>
-        <div class="todo">
+        <div class="content">
             <h1>TODO App</h1>
 
             {% if tasks|length < 1 %} <h4>No tasks currently created. Create one now!</h4>
@@ -45,26 +66,28 @@ Dashboard
 
                 <table>
                     <tr>
-                        <th>Completed</th>
-                        <th>Task</th>
-                        <th>Created</th>
-                        <th>Due Date</th>
-                        <th>Actions</th>
+                        <th style="text-align: center;">Completed</th>
+                        <th style="text-align: center;">Task</th>
+                        <th style="text-align: center;">Created</th>
+                        <th style="text-align: center;">Due Date</th>
+                        <th style="text-align: center;">Actions</th>
                     </tr>
                     {% for task in tasks %}
                     <tr>
                         {% if task.completed %}
                         <form>
-                            <td><input type="checkbox" name="completed" value={{task.completed}} checked>&nbsp</td>
+                            <td><input type="checkbox" disabled="disabled" name="completed" value={{task.completed}}
+                                    checked>&nbsp</td>
                         </form>
                         {% else %}
                         <form>
-                            <td><input type="checkbox" name="completed" value={{task.completed}}>&nbsp</td>
+                            <td><input type="checkbox" disabled="disabled" name="completed"
+                                    value={{task.completed}}>&nbsp</td>
                         </form>
                         {% endif %}
                         <td>{{ task.content }}</td>
-                        <td>{{ task.date_created }}</td>
-                        <td>{{ task.due_date }}</td>
+                        <td>{{ task.date_created.strftime('%m-%d-%Y') }}</td>
+                        <td>{{ task.due_date.strftime('%m-%d-%Y') }}</td>
                         <td>
                             <form method="GET" action="/todo/delete/{{task.id}}">
                                 <input type="submit" value="Delete">

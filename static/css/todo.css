@@ -1,4 +1,4 @@
-body {
+body, html {
     padding-top: 40px;
     padding-bottom: 40px;
     background-color: #eee;
@@ -7,13 +7,21 @@ body {
   .container {
       margin-top: 20px;
   }
-  
-  .topleftbut {
-    float: left;
-    margin-left: 20px;
-  }
 
-  .addbut {
-    float: right;
-    margin-right: 20px;
-  }
+table, td, th {
+    border: 1px solid #aaa;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th {
+    height: 30px;
+}
+
+td {
+    text-align: center;
+    padding: 5px;
+}
